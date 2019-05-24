@@ -1,3 +1,5 @@
 # Constructors
 
-asdf
+
+/**
+column(int size, DType type, allocate_bitmask = false);

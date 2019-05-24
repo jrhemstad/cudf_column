@@ -1,6 +1,6 @@
 # Constructors
 
-Assume that `DType` is the same as `gdf_dtype`, and that `device_buffer` is effectively a `rmm::device_vector`.
+Assume that `DType` is the same as `gdf_dtype`, and that `device_buffer` is effectively a `rmm::device_vector` and `host_buffer` is effectively a `std::vector`. 
 
 Note: This design document purposefully ignores the issue of `allocators` and controlling how the device memory for the column is allocated. This will be added as the allocator design in fleshed out. For the timebeing, assume that an allocator handle can be passed into each of the constructors that controls how the device memory for the data and bitmask is allocated.
 

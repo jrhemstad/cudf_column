@@ -24,7 +24,7 @@ column(int size, DType type, bool allocate_bitmask = false);
  * @param[in] data_buffer device_buffer whose data will be *deep* copied
  * @param[in] mask_buffer Optional device_buffer whose data will be *deep* copied
  *---------------------------------------------------------------------------**/
-column(DType dtype, device_buffer data, device_buffer mask_buffer = nullptr);
+column(DType dtype, device_buffer data, device_buffer mask_buffer = device_buffer{});
 
 /**---------------------------------------------------------------------------*
  * @brief Construct a new column from a type, and device_buffers for data and
@@ -39,10 +39,11 @@ column(DType dtype, device_buffer data, device_buffer mask_buffer = nullptr);
  * @param dtype The element type
  * @param data device_buffer whose data will be moved from into this column
  * @param mask Optional device_buffer whose data will be moved from into this
- * column
+ * column. If no device_buffer is passed in, it is assumed all elements are
+ * valid and no bitmask is allocated.
  *---------------------------------------------------------------------------**/
 column(DType dtype, device_buffer&& data,
-       device_buffer&& mask_buffer = nullptr);
+       device_buffer&& mask_buffer = device_buffer{});
 
 /**---------------------------------------------------------------------------*
  * @brief Construct a new column from a type, and a device_buffer for data.

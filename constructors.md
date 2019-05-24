@@ -27,7 +27,8 @@ column(int size, DType type, bool allocate_bitmask = false);
  * @param[in] mask_buffer Optional device_buffer whose data will be *deep*
  *copied
  *---------------------------------------------------------------------------**/
-column(DType dtype, device_buffer data, device_buffer mask_buffer = device_buffer{});
+column(DType dtype, device_buffer data,
+       device_buffer mask_buffer = device_buffer{});
 
 /**---------------------------------------------------------------------------*
  * @brief Construct a new column from a type, and device_buffers for data and
@@ -89,7 +90,8 @@ column(DType dtype, device_buffer&& data, bool nan_as_null = true);
  * @param[in] mask_buffer Optional device_buffer whose data will be *deep*
  *copied
  *---------------------------------------------------------------------------**/
-column(DType dtype, host_buffer const& data, host_buffer const& mask_buffer = host_buffer{});
+column(DType dtype, host_buffer const& data,
+       host_buffer const& mask_buffer = host_buffer{});
 
 /**---------------------------------------------------------------------------*
  * @brief Construct a new column from a type, and a host_buffer for data.
@@ -106,5 +108,5 @@ column(DType dtype, host_buffer const& data, host_buffer const& mask_buffer = ho
  * @param nan_as_null If `dtype` is a floating point type, optionally allocate a
  * bitmask where every NaN value is set to NULL.
  *---------------------------------------------------------------------------**/
-column(DType dtype, device_buffer data, bool nan_as_null = true);
+column(DType dtype, host_buffer const& data, bool nan_as_null = true);
 ```

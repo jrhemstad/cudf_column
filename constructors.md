@@ -17,12 +17,13 @@ Assume that `DType` is the same as `gdf_dtype`, and that `device_buffer` is effe
 column(int size, DType type, bool allocate_bitmask = false);
 
 /**---------------------------------------------------------------------------*
- * @brief Construct a new column from a type, and candidated device_buffers for
+ * @brief Construct a new column from a type, and device_buffers for
  * data and bitmask that will be *deep* copied.
  *
  * @param[in] dtype The element type
  * @param[in] data_buffer device_buffer whose data will be *deep* copied
- * @param[in] mask_buffer Optional device_buffer whose data will be *deep* copied
+ * @param[in] mask_buffer Optional device_buffer whose data will be *deep*
+ *copied
  *---------------------------------------------------------------------------**/
 column(DType dtype, device_buffer data, device_buffer mask_buffer = device_buffer{});
 
@@ -73,4 +74,35 @@ column(DType dtype, device_buffer data, bool nan_as_null = true);
  * bitmask where every NaN value is set to NULL.
  *---------------------------------------------------------------------------**/
 column(DType dtype, device_buffer&& data, bool nan_as_null = true);
+
+/**---------------------------------------------------------------------------*
+ * @brief Construct a new column from a type, and host_buffers for
+ * data and bitmask.
+ *
+ * New device memory allocations will be made for the data and bitmask and the
+ * host_buffer's contents will be copied to device.
+ *
+ * @param[in] dtype The element type
+ * @param[in] data_buffer device_buffer whose data will be *deep* copied
+ * @param[in] mask_buffer Optional device_buffer whose data will be *deep*
+ *copied
+ *---------------------------------------------------------------------------**/
+column(DType dtype, host_buffer const& data, host_buffer const& mask_buffer = host_buffer{});
+
+/**---------------------------------------------------------------------------*
+ * @brief Construct a new column from a type, and a host_buffer for data.
+ *
+ * New device memory allocations will be made for the data and the
+ * host_buffer's contents will be copied to device.
+ *
+ * @note If `dtype` is a floating point type, an associated bitmask will be
+ * created where every NaN value is set to NULL. Otherwise, the bitmask will not
+ * be allocated.
+ *
+ * @param dtype The element type
+ * @param data device_buffer whose data will be deep copied into this column
+ * @param nan_as_null If `dtype` is a floating point type, optionally allocate a
+ * bitmask where every NaN value is set to NULL.
+ *---------------------------------------------------------------------------**/
+column(DType dtype, device_buffer data, bool nan_as_null = true);
 ```

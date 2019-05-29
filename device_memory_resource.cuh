@@ -1,3 +1,4 @@
+#pragma once
 namespace cudf {
 namespace mr {
 
@@ -62,13 +63,20 @@ class device_memory_resource {
    * object, i.e., does not check if they are two objects of the same class.
    *
    * @param other The other resource to compare to
-   * @return true If the two resources are equivalent
-   * @return false If the two resources are not equal
+   * @returns If the two resources are equivalent
    *---------------------------------------------------------------------------**/
   __host__ __device__ bool is_equal(const device_memory_resource& other) const
       noexcept {
     return do_is_equal(other);
   }
+
+  /**---------------------------------------------------------------------------*
+   * @brief Queries if the resource supports use of non-null streams for
+   * allocation/deallocation.
+   *
+   * @returns If the resource supports non-null streams
+   *---------------------------------------------------------------------------**/
+  virtual bool supports_streams() const noexcept = 0;
 
  private:
   /**---------------------------------------------------------------------------*
@@ -81,7 +89,7 @@ class device_memory_resource {
    * @param stream Stream on which to perform allocation
    * @return void* Pointer to the newly allocated memory
    *---------------------------------------------------------------------------**/
-  virtual pointer do_allocate(std::size_t bytes, cudaStream_t stream) = 0;
+  virtual void* do_allocate(std::size_t bytes, cudaStream_t stream) = 0;
 
   /**---------------------------------------------------------------------------*
    * @brief Deallocate memory pointed to by \p p.

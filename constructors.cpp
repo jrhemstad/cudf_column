@@ -16,23 +16,24 @@ the device memory for the data and bitmask is allocated.
  *
  * Both the data and bitmask are unintialized.
  *
- * @param[in] size The number of elements in the column
  * @param[in] type The element type
+ * @param[in] size The number of elements in the column
  * @param[in] allocate_bitmask Optionally allocate an appropriate sized
  * bitmask
  *---------------------------------------------------------------------------**/
-column(int size, DType type, bool allocate_bitmask = false);
+column(DType type, int size, bool allocate_bitmask = false);
 
 /**---------------------------------------------------------------------------*
  * @brief Construct a new column from a type, and device_buffers for
  * data and bitmask that will be *deep* copied.
  *
  * @param[in] dtype The element type
+ * @param[in] size The number of elements in the column
  * @param[in] data_buffer device_buffer whose data will be *deep* copied
  * @param[in] mask_buffer Optional device_buffer whose data will be *deep*
  *copied
  *---------------------------------------------------------------------------**/
-column(DType dtype, device_buffer data,
+column(DType dtype, int size, device_buffer data,
        device_buffer mask_buffer = device_buffer{});
 
 /**---------------------------------------------------------------------------*
@@ -46,12 +47,13 @@ column(DType dtype, device_buffer data,
  * this constructor.
  *
  * @param dtype The element type
+ * @param[in] size The number of elements in the column
  * @param data device_buffer whose data will be moved from into this column
  * @param mask Optional device_buffer whose data will be moved from into this
  * column. If no device_buffer is passed in, it is assumed all elements are
  * valid and no bitmask is allocated.
  *---------------------------------------------------------------------------**/
-column(DType dtype, device_buffer&& data,
+column(DType dtype, int size, device_buffer&& data,
        device_buffer&& mask_buffer = device_buffer{});
 
 /**---------------------------------------------------------------------------*

@@ -6,6 +6,10 @@
 
 namespace cudf {
 namespace mr {
+/**---------------------------------------------------------------------------*
+ * @brief `device_memory_resource` derived class that uses cudaMalloc/Free for
+ * allocation/deallocation.
+ *---------------------------------------------------------------------------**/
 class cuda_memory_resource final : public device_memory_resource {
   bool supports_streams() const noexcept override { return false; }
 

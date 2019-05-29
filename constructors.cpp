@@ -31,9 +31,19 @@ column(DType type, int size, bool allocate_bitmask = false);
  *
  * @param[in] dtype The element type
  * @param[in] size The number of elements in the column
- * @param[in] data_buffer device_buffer whose data will be *deep* copied
+ * @param[in] data device_buffer whose data will be *deep* copied
  *---------------------------------------------------------------------------**/
 column(DType dtype, int size, device_buffer data);
+
+/**---------------------------------------------------------------------------*
+ * @brief Construct a new column from a type, and a device_buffer for
+ * data that will be shallow copied.
+ *
+ * @param[in] dtype The element type
+ * @param[in] size The number of elements in the column
+ * @param[in] data device_buffer whose data will be moved into this column
+ *---------------------------------------------------------------------------**/
+column(DType dtype, int size, device_buffer&& data);
 
 /**---------------------------------------------------------------------------*
  * @brief Construct a new column from a type, and device_buffers for data and

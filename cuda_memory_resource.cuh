@@ -16,7 +16,7 @@ class cuda_memory_resource final : public device_memory_resource {
    * @param bytes The size of the allocation
    * @return void* Pointer to the newly allocated memory
    *---------------------------------------------------------------------------**/
-  virtual void* do_allocate(std::size_t bytes, cudaStream_t) override {
+  void* do_allocate(std::size_t bytes, cudaStream_t) override {
     void* p{nullptr};
     cudaMalloc(&p, bytes);
     return p;
@@ -31,7 +31,7 @@ class cuda_memory_resource final : public device_memory_resource {
    * @param p Pointer to be deallocated
    * @param stream Stream on which to perform deallocation
    *---------------------------------------------------------------------------**/
-  virtual void do_deallocate(void* p, cudaStream_t) override { cudaFree(p); }
+  void do_deallocate(void* p, cudaStream_t) override { cudaFree(p); }
 };
 
 }  // namespace mr

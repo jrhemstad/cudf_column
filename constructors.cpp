@@ -1,7 +1,9 @@
 /**---------------------------------------------------------------------------*
  * @brief
  * Assume that `DType` is the same as `gdf_dtype`, and that `device_buffer` is
-effectively a `rmm::device_vector`.
+ * effectively a `rmm::device_vector`.
+ * Assume `bitmask` is a class that wraps a `device_buffer` of bitmask elements.
+ *
  *  Note: This design purposefully ignores the issue of `allocators` and
 controlling how the device memory for the column is allocated. This will be
 added as the allocator design in fleshed out. For the timebeing, assume that an
@@ -33,8 +35,7 @@ column(DType type, int size, bool allocate_bitmask = false);
  * @param[in] mask_buffer Optional device_buffer whose data will be *deep*
  *copied
  *---------------------------------------------------------------------------**/
-column(DType dtype, int size, device_buffer data,
-       device_buffer mask_buffer = device_buffer{});
+column(DType dtype, int size, device_buffer data, bitmask mask = bitmask{});
 
 /**---------------------------------------------------------------------------*
  * @brief Construct a new column from a type, and device_buffers for data and
@@ -53,8 +54,7 @@ column(DType dtype, int size, device_buffer data,
  * column. If no device_buffer is passed in, it is assumed all elements are
  * valid and no bitmask is allocated.
  *---------------------------------------------------------------------------**/
-column(DType dtype, int size, device_buffer&& data,
-       device_buffer&& mask_buffer = device_buffer{});
+column(DType dtype, int size, device_buffer&& data, bitmask&& mask = bitmask{});
 
 /**---------------------------------------------------------------------------*
  * @brief Construct a new column by deep copying the device memory of another

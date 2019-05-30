@@ -27,6 +27,8 @@ class device_memory_resource {
 
   /**---------------------------------------------------------------------------*
    * @brief Allocates memory of size at least \p bytes.
+   * 
+   * The returned pointer will have at minimum 256 byte alignment.
    *
    * If supported, this operation may optionally be executed on a stream.
    * Otherwise, the stream is ignored and the null stream is used.
@@ -81,6 +83,8 @@ class device_memory_resource {
  private:
   /**---------------------------------------------------------------------------*
    * @brief Allocates memory of size at least \p bytes.
+   * 
+   * The returned pointer will have at minimum 256 byte alignment.
    *
    * If supported, this operation may optionally be executed on a stream.
    * Otherwise, the stream is ignored and the null stream is used.

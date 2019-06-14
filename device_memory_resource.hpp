@@ -1,7 +1,12 @@
 #pragma once
-namespace cudf {
-namespace mr {
 
+#include <cstddef>
+
+// forward decl
+using cudaStream_t = struct CUstream_st*;
+
+namespace rmm {
+namespace mr {
 /**---------------------------------------------------------------------------*
  * @brief Base class for all libcudf device memory allocation.
  *
@@ -27,7 +32,7 @@ class device_memory_resource {
 
   /**---------------------------------------------------------------------------*
    * @brief Allocates memory of size at least \p bytes.
-   * 
+   *
    * The returned pointer will have at minimum 256 byte alignment.
    *
    * If supported, this operation may optionally be executed on a stream.
@@ -67,8 +72,7 @@ class device_memory_resource {
    * @param other The other resource to compare to
    * @returns If the two resources are equivalent
    *---------------------------------------------------------------------------**/
-  __host__ __device__ bool is_equal(const device_memory_resource& other) const
-      noexcept {
+  bool is_equal(const device_memory_resource& other) const noexcept {
     return do_is_equal(other);
   }
 
@@ -83,7 +87,7 @@ class device_memory_resource {
  private:
   /**---------------------------------------------------------------------------*
    * @brief Allocates memory of size at least \p bytes.
-   * 
+   *
    * The returned pointer will have at minimum 256 byte alignment.
    *
    * If supported, this operation may optionally be executed on a stream.
@@ -120,10 +124,9 @@ class device_memory_resource {
    * @return true If the two resources are equivalent
    * @return false If the two resources are not equal
    *---------------------------------------------------------------------------**/
-  __host__ __device__ virtual bool do_is_equal(
-      device_memory_resource const& other) const noexcept {
+  virtual bool do_is_equal(device_memory_resource const& other) const noexcept {
     return this == &other;
   }
 };
 }  // namespace mr
-}  // namespace cudf
+}  // namespace rmm

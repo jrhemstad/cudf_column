@@ -1,10 +1,10 @@
 #pragma once
 
-#include "device_memory_resource.cuh"
+#include "device_memory_resource.hpp"
 
 #include <cuda_runtime_api.h>
 
-namespace cudf {
+namespace rmm {
 namespace mr {
 /**---------------------------------------------------------------------------*
  * @brief `device_memory_resource` derived class that uses cudaMalloc/Free for

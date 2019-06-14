@@ -1,9 +1,7 @@
 // compile with `nvcc --std=c++14 example.cu`
 
-#include "cuda_memory_resource.cuh"
-#include "device_memory_resource.cuh"
-
 #include <cstdio>
+#include "default_memory_resource.hpp"
 
 constexpr int size{10};
 
@@ -20,7 +18,7 @@ __global__ void print(int* data) {
 }
 
 int main(void) {
-  cudf::mr::device_memory_resource* resource = new cudf::mr::cuda_memory_resource();
+  rmm::mr::device_memory_resource* resource = rmm::mr::get_default_resource();
 
   void* data = resource->allocate(size * sizeof(int));
 

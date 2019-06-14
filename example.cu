@@ -25,5 +25,5 @@ int main(void) {
   init<<<1, 256>>>(static_cast<int*>(data));
   print<<<1, 256>>>(static_cast<int*>(data));
 
-  resource->deallocate(data);
+  resource->deallocate(data, size*sizeof(int));
 }

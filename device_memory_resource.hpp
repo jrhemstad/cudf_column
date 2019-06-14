@@ -38,6 +38,8 @@ class device_memory_resource {
    * If supported, this operation may optionally be executed on a stream.
    * Otherwise, the stream is ignored and the null stream is used.
    *
+   * @throws std::bad_alloc When the requested size cannot be allocated.
+   *
    * @param bytes The size of the allocation
    * @param stream Stream on which to perform allocation
    * @return void* Pointer to the newly allocated memory
@@ -49,14 +51,21 @@ class device_memory_resource {
   /**---------------------------------------------------------------------------*
    * @brief Deallocate memory pointed to by \p p.
    *
+   * `p` must have been returned by a prior call to `allocate(bytes,stream)` on
+   * a `device_memory_resource` that compares equal to `*this`, and the storage
+   * it points to must not yet have been deallocated, otherwise behavior is
+   * undefined.
+   *
    * If supported, this operation may optionally be executed on a stream.
    * Otherwise, the stream is ignored and the null stream is used.
    *
    * @param p Pointer to be deallocated
+   * @param bytes The size in bytes of the allocation. This must be equal to the
+   * value of `bytes` that was passed to the `allocate` call that returned `p`.
    * @param stream Stream on which to perform deallocation
    *---------------------------------------------------------------------------**/
-  void deallocate(void* p, cudaStream_t stream = 0) {
-    do_deallocate(p, stream);
+  void deallocate(void* p, std::size_t bytes, cudaStream_t stream = 0) {
+    do_deallocate(p, bytes, stream);
   }
 
   /**---------------------------------------------------------------------------*
@@ -72,7 +81,7 @@ class device_memory_resource {
    * @param other The other resource to compare to
    * @returns If the two resources are equivalent
    *---------------------------------------------------------------------------**/
-  bool is_equal(const device_memory_resource& other) const noexcept {
+  bool is_equal(device_memory_resource const& other) const noexcept {
     return do_is_equal(other);
   }
 
@@ -106,9 +115,12 @@ class device_memory_resource {
    * Otherwise, the stream is ignored and the null stream is used.
    *
    * @param p Pointer to be deallocated
+   * @param bytes The size in bytes of the allocation. This must be equal to the
+   * value of `bytes` that was passed to the `allocate` call that returned `p`.
    * @param stream Stream on which to perform deallocation
    *---------------------------------------------------------------------------**/
-  virtual void do_deallocate(void* p, cudaStream_t stream) = 0;
+  virtual void do_deallocate(void* p, std::size_t bytes,
+                             cudaStream_t stream) = 0;
 
   /**---------------------------------------------------------------------------*
    * @brief Compare this resource to another.

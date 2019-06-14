@@ -2,6 +2,7 @@
 
 #include <cstdio>
 #include "default_memory_resource.hpp"
+#include <cassert>
 
 constexpr int size{10};
 
@@ -25,6 +26,8 @@ int main(void) {
 
   init<<<1, 256>>>(static_cast<int*>(data));
   print<<<1, 256>>>(static_cast<int*>(data));
+
+  assert(cudaSuccess == cudaDeviceSynchronize());
 
   resource->deallocate(data, size_in_bytes);
 }

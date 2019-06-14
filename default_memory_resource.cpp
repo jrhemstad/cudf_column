@@ -7,13 +7,14 @@
 namespace rmm {
 namespace mr {
 namespace {
-inline device_memory_resource* default_resource() {
+// The initial, default memory resource is a `cuda_memory_resource`
+device_memory_resource* initial_resource() {
   static cuda_memory_resource resource{};
   return &resource;
 }
 
-inline std::atomic<device_memory_resource*>& get_default() {
-  static std::atomic<device_memory_resource*> res{default_resource()};
+std::atomic<device_memory_resource*>& get_default() {
+  static std::atomic<device_memory_resource*> res{initial_resource()};
   return res;
 }
 }  // namespace
@@ -23,7 +24,7 @@ device_memory_resource* get_default_resource() { return get_default().load(); }
 device_memory_resource* set_default_resource(
     device_memory_resource* new_resource) {
   if (nullptr == new_resource) {
-    get_default().exchange(default_resource());
+    get_default().exchange(initial_resource());
   }
 
   return get_default().exchange(new_resource);

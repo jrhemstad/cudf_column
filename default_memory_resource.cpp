@@ -20,11 +20,13 @@ inline std::atomic<device_memory_resource*>& get_default() {
 
 device_memory_resource* get_default_resource() { return get_default().load(); }
 
-device_memory_resource* set_global_resource(
+device_memory_resource* set_default_resource(
     device_memory_resource* new_resource) {
+  if (nullptr == new_resource) {
+    get_default().exchange(default_resource());
+  }
+
   return get_default().exchange(new_resource);
 }
 }  // namespace mr
 }  // namespace rmm
-
-namespace detail {}

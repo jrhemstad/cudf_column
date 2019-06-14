@@ -3,6 +3,8 @@
 #include "device_memory_resource.hpp"
 
 #include <cuda_runtime_api.h>
+#include <iostream>
+#include <exception>
 
 namespace rmm {
 namespace mr {
@@ -22,7 +24,12 @@ class cuda_memory_resource final : public device_memory_resource {
    *---------------------------------------------------------------------------**/
   void* do_allocate(std::size_t bytes, cudaStream_t) override {
     void* p{nullptr};
-    cudaMalloc(&p, bytes);
+    cudaError_t status = cudaMalloc(&p, bytes);
+    if (cudaSuccess != status) {
+      std::cerr << "cudaMalloc failed: " << cudaGetErrorName(status) << " "
+                << cudaGetErrorString(status) << "\n";
+      throw std::bad_alloc{};
+    }
     return p;
   }
 
@@ -35,8 +42,10 @@ class cuda_memory_resource final : public device_memory_resource {
    * @param p Pointer to be deallocated
    * @param stream Stream on which to perform deallocation
    *---------------------------------------------------------------------------**/
-  void do_deallocate(void* p, cudaStream_t) override { cudaFree(p); }
+  void do_deallocate(void* p, std::size_t, cudaStream_t) override {
+    cudaFree(p);
+  }
 };
 
 }  // namespace mr
-}  // namespace cudf
+}  // namespace rmm

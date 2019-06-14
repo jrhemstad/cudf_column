@@ -19,11 +19,12 @@ __global__ void print(int* data) {
 
 int main(void) {
   rmm::mr::device_memory_resource* resource = rmm::mr::get_default_resource();
+  std::size_t size_in_bytes = size * sizeof(int);
 
-  void* data = resource->allocate(size * sizeof(int));
+  void* data = resource->allocate(size_in_bytes);
 
   init<<<1, 256>>>(static_cast<int*>(data));
   print<<<1, 256>>>(static_cast<int*>(data));
 
-  resource->deallocate(data, size*sizeof(int));
+  resource->deallocate(data, size_in_bytes);
 }

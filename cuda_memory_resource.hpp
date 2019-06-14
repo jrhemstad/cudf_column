@@ -3,8 +3,9 @@
 #include "device_memory_resource.hpp"
 
 #include <cuda_runtime_api.h>
-#include <iostream>
+#include <cassert>
 #include <exception>
+#include <iostream>
 
 namespace rmm {
 namespace mr {
@@ -18,6 +19,8 @@ class cuda_memory_resource final : public device_memory_resource {
  private:
   /**---------------------------------------------------------------------------*
    * @brief Allocates memory of size at least \p bytes using cudaMalloc.
+   *
+   * The returned pointer has at least 256B alignment.
    *
    * @param bytes The size of the allocation
    * @return void* Pointer to the newly allocated memory
@@ -43,7 +46,7 @@ class cuda_memory_resource final : public device_memory_resource {
    * @param stream Stream on which to perform deallocation
    *---------------------------------------------------------------------------**/
   void do_deallocate(void* p, std::size_t, cudaStream_t) override {
-    cudaFree(p);
+    assert(cudaSuccess == cudaFree(p));
   }
 };
 

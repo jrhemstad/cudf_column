@@ -22,12 +22,12 @@ class cuda_memory_resource final : public device_memory_resource {
    *
    * The returned pointer has at least 256B alignment.
    *
-   * @param bytes The size of the allocation
+   * @param bytes The size, in bytes, of the allocation
    * @return void* Pointer to the newly allocated memory
    *---------------------------------------------------------------------------**/
   void* do_allocate(std::size_t bytes, cudaStream_t) override {
     void* p{nullptr};
-    cudaError_t status = cudaMalloc(&p, bytes);
+    cudaError_t const status = cudaMalloc(&p, bytes);
     if (cudaSuccess != status) {
       std::cerr << "cudaMalloc failed: " << cudaGetErrorName(status) << " "
                 << cudaGetErrorString(status) << "\n";
@@ -43,7 +43,6 @@ class cuda_memory_resource final : public device_memory_resource {
    * Otherwise, the stream is ignored and the null stream is used.
    *
    * @param p Pointer to be deallocated
-   * @param stream Stream on which to perform deallocation
    *---------------------------------------------------------------------------**/
   void do_deallocate(void* p, std::size_t, cudaStream_t) override {
     assert(cudaSuccess == cudaFree(p));

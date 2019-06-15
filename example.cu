@@ -1,10 +1,9 @@
 // compile with `nvcc --std=c++14 example.cu`
 
+#include <cassert>
+#include <cstdio>
 #include "default_memory_resource.hpp"
 #include "device_buffer.hpp"
-
-#include <cstdio>
-#include <cassert>
 
 constexpr int size{10};
 
@@ -21,15 +20,11 @@ __global__ void print(int* data) {
 }
 
 int main(void) {
-  rmm::mr::device_memory_resource* resource = rmm::mr::get_default_resource();
   std::size_t size_in_bytes = size * sizeof(int);
+  rmm::device_buffer buff(size_in_bytes);
 
-  void* data = resource->allocate(size_in_bytes);
-
-  init<<<1, 256>>>(static_cast<int*>(data));
-  print<<<1, 256>>>(static_cast<int*>(data));
+  init<<<1, 256>>>(static_cast<int*>(buff.data()));
+  print<<<1, 256>>>(static_cast<int*>(buff.data()));
 
   assert(cudaSuccess == cudaDeviceSynchronize());
-
-  resource->deallocate(data, size_in_bytes);
 }

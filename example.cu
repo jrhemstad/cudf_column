@@ -1,7 +1,9 @@
 // compile with `nvcc --std=c++14 example.cu`
 
-#include <cstdio>
 #include "default_memory_resource.hpp"
+#include "device_buffer.hpp"
+
+#include <cstdio>
 #include <cassert>
 
 constexpr int size{10};

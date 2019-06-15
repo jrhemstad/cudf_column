@@ -15,6 +15,8 @@ namespace rmm {
 
 class device_buffer {
  public:
+  device_buffer() = delete;
+
   /**---------------------------------------------------------------------------*
    * @brief Constructs a new device buffer of `size` bytes
    *
@@ -23,8 +25,9 @@ class device_buffer {
    * resource supports streams, else the null stream is used.
    * @param mr Memory resource to use for the device memory allocation
    *---------------------------------------------------------------------------**/
-  device_buffer(std::size_t size, cudaStream_t stream = 0,
-                mr::device_memory_resource* mr = mr::get_default_resource())
+  explicit device_buffer(
+      std::size_t size, cudaStream_t stream = 0,
+      mr::device_memory_resource* mr = mr::get_default_resource())
       : _size{size}, _stream{stream}, _mr{mr} {
     _data = _mr->allocate(size, stream);
   }
@@ -54,7 +57,6 @@ class device_buffer {
     other._data = nullptr;
     other._size = 0;
     other._stream = 0;
-    other._mr = nullptr;
   }
 
   /**---------------------------------------------------------------------------*
@@ -67,8 +69,8 @@ class device_buffer {
     if (&other != this) {
       _mr->deallocate(_data, _size, _stream);
       _size = other._size;
-      _mr = other._mr;
       _stream = other._stream;
+      _mr = other._mr;
       _data = _mr->allocate(_size, _stream);
       assert(cudaSuccess == cudaMemcpyAsync(_data, other._data, _size,
                                             cudaMemcpyDefault, _stream));
@@ -93,7 +95,6 @@ class device_buffer {
       other._data = nullptr;
       other._size = 0;
       other._stream = 0;
-      other._mr = nullptr;
     }
     return *this;
   }
@@ -130,7 +131,7 @@ class device_buffer {
    * @brief Returns pointer to the memory resource used to allocate and
    * deallocate the device memory
    *---------------------------------------------------------------------------**/
-  mr::device_memory_resource const * memory_resource() const { return _mr; }
+  mr::device_memory_resource const* memory_resource() const { return _mr; }
 
  private:
   void* _data{nullptr};     ///< Pointer to device memory allocation
